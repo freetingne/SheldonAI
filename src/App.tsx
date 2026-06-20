@@ -1,22 +1,28 @@
 import {
   ArrowRight,
   BarChart3,
+  Bell,
   Bot,
   BrainCircuit,
+  Bookmark,
   Check,
   ChevronDown,
   CircleHelp,
   FileText,
   Gauge,
+  Grid2X2,
   ImagePlus,
   LayoutDashboard,
+  Link2,
   LockKeyhole,
   Menu,
   MessageSquareText,
   MousePointer2,
   Network,
+  PanelLeftClose,
   Play,
   Search,
+  SendHorizontal,
   ShieldCheck,
   Sparkles,
   SquarePen,
@@ -1003,13 +1009,13 @@ function LoginPage({ onLogin }: { onLogin: () => void }) {
 
 function WorkspaceApp({ view, onLogout }: { view: WorkspaceView; onLogout: () => void }) {
   const sidebarItems = [
-    { id: 'chat' as const, label: 'AI 对话', icon: <MessageSquareText size={22} />, locked: false },
-    { id: 'agents' as const, label: 'AI 智能体', icon: <Bot size={22} />, locked: false },
-    { id: 'creation' as const, label: 'AI 创作', icon: <WandSparkles size={22} />, locked: false },
-    { id: 'board' as const, label: '无限画板', icon: <Network size={22} />, locked: false },
-    { id: 'competitor' as const, label: '竞品分析', icon: <Search size={22} />, locked: true },
-    { id: 'insights' as const, label: '数据洞察', icon: <BarChart3 size={22} />, locked: true },
-    { id: 'automation' as const, label: '自动化助手', icon: <Zap size={22} />, locked: true },
+    { id: 'chat' as const, label: 'AI对话', icon: <MessageSquareText size={21} />, locked: false },
+    { id: 'agents' as const, label: 'AI智能体', icon: <Bot size={21} />, locked: false },
+    { id: 'creation' as const, label: 'AI创作', icon: <WandSparkles size={21} />, locked: false },
+    { id: 'board' as const, label: '无限画板', icon: <Network size={21} />, locked: true },
+    { id: 'competitor' as const, label: '竞品分析', icon: <Search size={21} />, locked: true },
+    { id: 'insights' as const, label: '玺承BI', icon: <BarChart3 size={21} />, locked: true },
+    { id: 'automation' as const, label: '万能玺虾', icon: <Zap size={21} />, locked: true },
   ];
 
   return (
@@ -1022,8 +1028,8 @@ function WorkspaceApp({ view, onLogout }: { view: WorkspaceView; onLogout: () =>
             </span>
             <span>{brand.name}</span>
           </a>
-          <button className="icon-button" type="button" aria-label="收起侧边栏">
-            <ChevronDown size={18} />
+          <button className="sidebar-collapse-button" type="button" aria-label="收起侧边栏">
+            <PanelLeftClose size={18} />
           </button>
         </div>
 
@@ -1052,6 +1058,23 @@ function WorkspaceApp({ view, onLogout }: { view: WorkspaceView; onLogout: () =>
             </button>
           ))}
         </nav>
+
+        <div className="quota-card">
+          <div className="quota-card-head">
+            <strong>我的额度</strong>
+            <span>个人用户</span>
+          </div>
+          <b>0</b>
+          <i />
+        </div>
+
+        <div className="workspace-user-row">
+          <span className="user-avatar">郑</span>
+          <strong>郑一</strong>
+          <button type="button" aria-label="通知">
+            <Bell size={18} />
+          </button>
+        </div>
 
         <button className="workspace-logout" type="button" onClick={onLogout}>
           退出登录
@@ -1426,23 +1449,7 @@ type ChatMessage = {
 
 function AIChatPage() {
   const [input, setInput] = useState('');
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: 1,
-      role: 'ai',
-      text: '你好，我是 SheldonAI 经营顾问。你可以把经营问题、数据表格、商品链接或创作目标发给我，我会先帮你拆成可执行步骤。',
-    },
-    {
-      id: 2,
-      role: 'user',
-      text: '这周主图点击率为什么下降？',
-    },
-    {
-      id: 3,
-      role: 'ai',
-      text: '初步判断需要看三个维度：搜索词变化、竞品主图更新、投放人群变化。当前演示版先展示分析流程，后续接入数据后会自动给出根因和行动清单。',
-    },
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
 
   const sendMessage = (text: string) => {
     const value = text.trim();
@@ -1454,147 +1461,148 @@ function AIChatPage() {
       {
         id: Date.now() + 1,
         role: 'ai',
-        text: `已收到：「${value}」。我会按“问题拆解 → 数据检查 → 机会判断 → 行动建议”的结构输出。当前是前端演示回复，后续可替换为真实 AI 接口。`,
+        text: `已收到：「${value}」。当前是前端演示回复，后续接入真实 AI 后会生成完整的经营分析方案。`,
       },
     ]);
     setInput('');
   };
 
-  const quickPrompts = [
-    '帮我分析这个店铺本周 ROI 为什么下降',
-    '根据新品资料生成一份主图策划方向',
-    '把这份表格整理成经营复盘',
-    '找出竞品比我强的三个原因',
+  const skillCategories = [
+    { label: '全部技能', icon: <Grid2X2 size={18} />, active: true },
+    { label: '我的技能', icon: <WandSparkles size={18} /> },
+    { label: '订阅技能', icon: <Bookmark size={18} /> },
+    { label: '系统技能', icon: <LayoutDashboard size={18} /> },
+  ];
+
+  const skillCards = [
+    {
+      title: '蓝海报告选品解读助手',
+      description: '基于连续四周商品排行榜数据与店铺画像，快速提炼机会品类。',
+    },
+    {
+      title: '【提示词助手】卖点主图文案生成',
+      description: '根据商品描述与核心卖点，生成面向电商主图的高转化文案。',
+    },
+    {
+      title: '【提示词助手】买家秀生成助手',
+      description: '基于用户提供的买家秀图片，生成同场景内容方向和发布建议。',
+    },
   ];
 
   return (
     <section className="ai-chat-page">
-      <div className="chat-page-header">
-        <div>
-          <span className="section-kicker">AI Conversation</span>
+      <aside className="chat-sessions">
+        <div className="chat-session-header">
           <h1>AI 对话</h1>
-          <p>把问题、数据和素材放进来，SheldonAI 会帮你拆解经营判断和下一步动作。</p>
-        </div>
-        <div className="chat-status">
-          <span />
-          本地演示模式
-        </div>
-      </div>
-
-      <div className="chat-workspace">
-        <aside className="chat-sessions">
-          <button className="new-chat-button" type="button">
-            <MessageSquareText size={18} />
-            新建对话
+          <button type="button" aria-label="展开会话菜单">
+            <Menu size={21} />
           </button>
-          {['今日经营复盘', '主图点击率诊断', '竞品机会词分析', '新品上架 SOP'].map(
-            (session, index) => (
-              <button className={index === 0 ? 'active' : ''} key={session} type="button">
-                <strong>{session}</strong>
-                <small>{index === 0 ? '刚刚' : `${index + 1} 小时前`}</small>
-              </button>
-            ),
-          )}
-        </aside>
+        </div>
 
-        <div className="chat-panel-main">
-          <div className="chat-toolbar">
-            <span>当前上下文</span>
+        <button className="new-chat-button" type="button">
+          <SquarePen size={19} />
+          发起新对话
+        </button>
+
+        <span className="recent-title">最近对话</span>
+
+        <div className="chat-empty-state">
+          <span />
+          <strong>暂无聊天记录</strong>
+          <p>开始新对话后会显示在这里</p>
+        </div>
+      </aside>
+
+      <main className="chat-home-main">
+        <div className="chat-home-hero">
+          <h1>
+            为您提供 <span>电商经营全链路AI解决方案</span>
+          </h1>
+          <p>数据驱动决策，智能赋能增长</p>
+        </div>
+
+        <form
+          className="chat-home-composer"
+          onSubmit={(event) => {
+            event.preventDefault();
+            sendMessage(input);
+          }}
+        >
+          <textarea
+            value={input}
+            placeholder="请输入内容..."
+            rows={5}
+            onChange={(event) => setInput(event.target.value)}
+          />
+
+          <div className="home-composer-footer">
+            <div className="home-composer-tools">
+              <button className="skill-trigger-button" type="button">
+                <Zap size={18} />
+                技能
+              </button>
+              <button className="link-tool-button" type="button" aria-label="添加链接">
+                <Link2 size={18} />
+              </button>
+            </div>
+
+            <div className="model-send-row">
+              <span className="model-orb" />
+              <span>SheldonAI 2.0</span>
+              <button className="send-square-button" type="submit" aria-label="发送">
+                <SendHorizontal size={20} />
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <section className="skill-browser">
+          <div className="skill-search-row">
+            <label>
+              <input placeholder="请输入想搜索的技能名称或描述" />
+              <Search size={20} />
+            </label>
             <button type="button">
-              <FileText size={16} />
-              上传资料
-            </button>
-            <button type="button">
-              <BrainCircuit size={16} />
-              选择智能体
+              <FileText size={20} />
+              导入技能
             </button>
           </div>
 
-          <div className="chat-messages">
+          <div className="skill-browser-body">
+            <nav className="skill-category-list" aria-label="技能分类">
+              {skillCategories.map((category) => (
+                <button className={category.active ? 'active' : ''} key={category.label} type="button">
+                  {category.icon}
+                  {category.label}
+                </button>
+              ))}
+            </nav>
+
+            <div className="skill-card-grid">
+              {skillCards.map((skill) => (
+                <article className="skill-card" key={skill.title}>
+                  <div>
+                    <h2>{skill.title}</h2>
+                    <span>系统技能</span>
+                  </div>
+                  <p>{skill.description}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {messages.length ? (
+          <section className="chat-live-preview">
             {messages.map((message) => (
               <div className={`chat-message-row ${message.role}`} key={message.id}>
-                <div className="message-avatar">
-                  {message.role === 'ai' ? <Sparkles size={17} /> : '我'}
-                </div>
+                <div className="message-avatar">{message.role === 'ai' ? <Sparkles size={16} /> : '我'}</div>
                 <div className="chat-bubble">{message.text}</div>
               </div>
             ))}
-          </div>
-
-          <div className="quick-prompts">
-            {quickPrompts.map((prompt) => (
-              <button key={prompt} type="button" onClick={() => sendMessage(prompt)}>
-                {prompt}
-              </button>
-            ))}
-          </div>
-
-          <form
-            className="chat-composer"
-            onSubmit={(event) => {
-              event.preventDefault();
-              sendMessage(input);
-            }}
-          >
-            <textarea
-              value={input}
-              placeholder="输入你的经营问题、创作目标或数据分析需求..."
-              rows={3}
-              onChange={(event) => setInput(event.target.value)}
-            />
-            <div className="composer-footer">
-              <div>
-                <button type="button">
-                  <FileText size={16} />
-                  文档
-                </button>
-                <button type="button">
-                  <ImagePlus size={16} />
-                  图片
-                </button>
-                <button type="button">
-                  <LayoutDashboard size={16} />
-                  表格
-                </button>
-              </div>
-              <button className="send-button" type="submit">
-                发送
-                <ArrowRight size={17} />
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <aside className="chat-inspector">
-          <div className="inspector-card">
-            <h3>已连接能力</h3>
-            <ul>
-              <li>
-                <Check size={16} />
-                经营问题拆解
-              </li>
-              <li>
-                <Check size={16} />
-                表格分析入口
-              </li>
-              <li>
-                <Check size={16} />
-                智能体调用预留
-              </li>
-            </ul>
-          </div>
-          <div className="inspector-card">
-            <h3>示例数据</h3>
-            <MetricCard label="本周销售额" value="¥128.6万" />
-            <MetricCard label="CTR 变化" value="-1.6pp" />
-            <MetricCard label="建议优先级" value="P1" />
-          </div>
-          <div className="inspector-card">
-            <h3>下一步建议</h3>
-            <p>先上传本周投放表和主图素材，SheldonAI 会把原因拆成“流量、素材、人群、价格”四类。</p>
-          </div>
-        </aside>
-      </div>
+          </section>
+        ) : null}
+      </main>
     </section>
   );
 }
